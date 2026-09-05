@@ -1,4 +1,4 @@
-cd ~/Desktop
+
 pip install opencv-python openai streamlit
 cat << 'EOF' > app.py
 import streamlit as st
