@@ -9,7 +9,6 @@ st.title("Reality Verification Engine")
 user_input = st.text_area("Describe your scenario or observation:")
 
 clicked = st.button("Analyze Scenario (Free)")
-
 if clicked and not user_input.strip():
 st.warning("Please enter a description.")
 
