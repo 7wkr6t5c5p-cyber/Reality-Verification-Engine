@@ -11,18 +11,15 @@ user_input = st.text_area("Describe your scenario or observation:")
 clicked = st.button("Analyze Scenario (Free)")
 
 if clicked and not user_input.strip():
-  st.warning("Please enter a description.")
+st.warning("Please enter a description.")
 
 if clicked and user_input.strip():
-  try:
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 response = client.chat.completions.create(
 model="gpt-4o-mini",
 messages=[{"role": "user", "content": user_input}]
 )
 st.write(response.choices[0].message.content)
-except Exception as e:
-st.error(f"Error connecting to AI: {e}")
 
 st.markdown("---")
 
@@ -35,6 +32,11 @@ uploaded_file = st.file_uploader("Upload Video File", type=["mp4", "mov", "avi"]
 
 if uploaded_file is not None:
 tfile = tempfile.NamedTemporaryFile(delete=False)
+tfile.write(uploaded_file.read())
+video_path = tfile.name
+
+if st.button("Run Video Verification"):
+with st.spinner("Extracting frames and analyzing video..."):tfile = tempfile.NamedTemporaryFile(delete=False)
 tfile.write(uploaded_file.read())
 video_path = tfile.name
 
