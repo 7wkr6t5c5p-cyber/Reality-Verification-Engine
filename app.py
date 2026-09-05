@@ -18,11 +18,11 @@ frames = []
 count = 0
 success, image = vidcap.read()
 while success:
-if count % step == 0 and len(frames) < max_frames:
-_, buffer = cv2.imencode(".jpg", image)
-frames.append(buffer.tobytes())
-success, image = vidcap.read()
-count += 1
+  if count % step == 0 and len(frames) < max_frames:
+  _, buffer = cv2.imencode(".jpg", image)
+  frames.append(buffer.tobytes())
+  success, image = vidcap.read()
+  count += 1
 vidcap.release()
 return frames
 
