@@ -14,7 +14,7 @@ if clicked and not user_input.strip():
   st.warning("Please enter a description.")
 
 if clicked and user_input.strip():
-try:
+    try:
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 response = client.chat.completions.create(
 model="gpt-4o-mini",
