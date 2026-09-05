@@ -10,8 +10,8 @@ api_key = st.sidebar.text_input("API Key", type="password")
 user_input = st.text_area("Observation or Context:", placeholder="Describe what you want to verify or look for in this video...")
 uploaded_file = st.file_uploader("Upload Video File", type=["mp4", "mov", "avi", "mkv"])
 
-def extract_key_frames(video_path, max_frames=6):
-vidcap = cv2.VideoCapture(video_path)
+def extract_key_frames(video_path, max_frames=6):  
+  vidcap = cv2.VideoCapture(video_path)
 total_frames = int(vidcap.get(cv2.CAP_PROP_FRAME_COUNT))
 step = max(total_frames // max_frames, 1)
 frames = []
