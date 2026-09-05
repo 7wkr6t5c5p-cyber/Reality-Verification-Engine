@@ -1,35 +1,59 @@
-import streamlit as st
+mport streamlit as st
 import cv2
+import tempfile
+import base64
 from openai import OpenAI
 
 st.title("Reality Verification Engine")
 
-# 1. Free Tier: Text-only scenario analysis powered by your master app key
 user_input = st.text_area("Describe your scenario or observation:")
 
 if st.button("Analyze Scenario (Free)"):
 if not user_input.strip():
 st.warning("Please enter a description.")
 else:
-# Use a secret master key stored in Streamlit Cloud settings
+try:
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 response = client.chat.completions.create(
 model="gpt-4o-mini",
 messages=[{"role": "user", "content": user_input}]
-]
+)
 st.write(response.choices[0].message.content)
+except Exception as e:
+st.error(f"Error connecting to AI: {e}")
 
-# 2. Paid Feature Gate: Video Upload
 st.markdown("---")
-st.subheader("Advanced Video Verification (Paid Feature)")
 
-# Example gating mechanism (e.g., a simple feature access code or Stripe integration redirect)
+st.subheader("Advanced Video Verification (Gated Feature)")
 access_code = st.text_input("Enter your access pass or code to unlock video analysis:", type="password")
 
 if access_code == "YOUR_SECRET_PAID_PASSCODE":
+st.success("Video analysis unlocked!")
 uploaded_file = st.file_uploader("Upload Video File", type=["mp4", "mov", "avi"])
-if uploaded_file and st.button("Run Video Verification"):
-st.info("Processing video frames with your unlocked access...")
-# Video frame extraction and OpenAI Vision processing code goes here
-else:
-st.info("Unlock video uploads by purchasing an access pass or using your own API key.")
+
+if uploaded_file is not None:
+tfile = tempfile.NamedTemporaryFile(delete=False)
+tfile.write(uploaded_file.read())
+video_path = tfile.name
+
+if st.button("Run Video Verification"):
+with st.spinner("Extracting frames and analyzing video..."):
+try:
+cap = cv2.VideoCapture(video_path)
+frames = []
+frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+step = max(int(frame_count / 6), 1)
+current_frame = 0
+
+while cap.isOpened() and len(frames) < 6:
+ret, frame = cap.read()
+if not ret:
+break
+if current_frame % step == 0:
+frame = cv2.resize(frame, (640, 360))
+success, buffer = cv2.imencode(".jpg", frame)
+if success:
+base64_image = base64.b64encode(buffer).decode("utf-8")
+frames.append(base64_image)
+current_frame += 1
+cap.release()
