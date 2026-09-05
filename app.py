@@ -10,7 +10,7 @@ user_input = st.text_area("Describe your scenario or observation:")
 
 button_clicked = st.button("Analyze Scenario (Free)")
 if button_clicked and not user_input.strip():
-st.warning("Please enter a description.")
+  st.warning("Please enter a description.")
 elif button_clicked:
 try:
 client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
