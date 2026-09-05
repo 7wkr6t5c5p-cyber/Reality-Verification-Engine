@@ -15,7 +15,7 @@ if clicked and not user_input.strip():
 
 if clicked and user_input.strip():
     try:
-  client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+      client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 response = client.chat.completions.create(
 model="gpt-4o-mini",
 messages=[{"role": "user", "content": user_input}]
